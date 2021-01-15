@@ -1,12 +1,12 @@
-import express from 'express';
-import * as http from 'http';
 import * as bodyparser from 'body-parser';
-import * as winston from 'winston';
+import cors from 'cors';
+import debug from 'debug';
+import express from 'express';
 import * as expressWinston from 'express-winston';
-import cors from 'cors'
+import * as http from 'http';
+import * as winston from 'winston';
 import { CommonRoutesConfig } from './common/common.routes.config';
 import { UsersRoutes } from './users/users.routes.config';
-import debug from 'debug';
 
 const app: express.Application = express();
 const server: http.Server = http.createServer(app);
@@ -14,6 +14,7 @@ const port: Number = 3000;
 const routes: Array<CommonRoutesConfig> = [];
 const debugLog: debug.IDebugger = debug('app');
 
+app.use(bodyparser.urlencoded({ extended: true })); // for multipart/form-data, use multer instead
 app.use(bodyparser.json());
 app.use(cors());
 
