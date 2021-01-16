@@ -2,6 +2,7 @@
  * Required External Modules and Interfaces
  */
 import express, { Request, Response } from 'express';
+import { checkJwt } from "../middleware/authz.middleware";
 import { Item } from './item.interface';
 import { Items } from './items.interface';
 import * as ItemService from './items.service';
@@ -37,6 +38,9 @@ itemsRouter.get('/:id', async (req: Request, res: Response) => {
     res.status(404).send(e.message);
   }
 });
+
+// Mount authorization middleware
+itemsRouter.use(checkJwt);
 
 // POST items/
 itemsRouter.post('/', async (req: Request, res: Response) => {
