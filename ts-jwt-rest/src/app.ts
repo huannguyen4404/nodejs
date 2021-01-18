@@ -2,6 +2,8 @@ import compression from 'compression'
 import cors from 'cors'
 import express from 'express'
 import helmet from 'helmet'
+import { ProductsRouter } from './products/products.routes'
+import { UsersRoutes } from './users/users.routes'
 
 class App {
   public app: express.Application
@@ -23,7 +25,8 @@ class App {
   }
 
   public routes(): void {
-    // Load routes
+    this.app.use('/api/users', new UsersRoutes().router)
+    this.app.use('/api/products', new ProductsRouter().router)
   }
 
   private dbConnect() {
