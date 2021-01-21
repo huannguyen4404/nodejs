@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { UsersController } from './users.controller'
+import { UsersController } from './controllers/users.controller'
 
 export class UsersRoutes {
   public router: Router
@@ -11,6 +11,7 @@ export class UsersRoutes {
   }
 
   routes(): void {
+    // DEMO only, consider to use an Identify Provider
     this.router.post('/register', this.usersController.registerUser)
     this.router.post('/login', this.usersController.authenticate)
   }
