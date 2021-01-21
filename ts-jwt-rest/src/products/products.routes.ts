@@ -13,5 +13,8 @@ export class ProductsRouter {
   routes(): void {
     this.router.get('/', this.productsController.getProducts)
     this.router.get('/:id', this.productsController.getProduct)
+    this.router.post('/', this.productsController.createProduct)
+    this.router.put('/:id', this.productsController.updateProduct)
+    this.router.delete('/:id', this.productsController.deleteProduct)
   }
 }
