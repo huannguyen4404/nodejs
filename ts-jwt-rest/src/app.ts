@@ -1,9 +1,14 @@
 import compression from 'compression'
 import cors from 'cors'
+import * as dotenv from 'dotenv'
 import express from 'express'
 import helmet from 'helmet'
+import mongoose from 'mongoose'
 import { ProductsRouter } from './products/products.routes'
 import { UsersRoutes } from './users/users.routes'
+import { MONGODB_URI } from './utils/secrets'
+
+dotenv.config()
 
 class App {
   public app: express.Application
@@ -30,7 +35,45 @@ class App {
   }
 
   private dbConnect() {
-    // Connect with DB
+    const connection = mongoose.connection
+    const connectOpts = {
+      autoReconnect: true,
+      keepAlive: true,
+      socketTimeoutMS: 3000,
+      connectTimeoutMS: 3000,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+      autoIndex: false, // Don't build indexes
+    }
+
+    connection.on('connected', () => {
+      console.log('Mongo Connection Established')
+    })
+
+    connection.on('reconnected', () => {
+      console.log('Mongo Connection RE-established')
+    })
+
+    connection.on('disconnected', () => {
+      console.log('Mongo Connection Disconnected')
+      console.log('Trying to reconnect to Mongo ...')
+      setTimeout(() => {
+        mongoose.connect(MONGODB_URI || '', connectOpts)
+      }, 3000)
+    })
+
+    connection.on('close', () => {
+      console.log('Mongo Connection Closed')
+    })
+    connection.on('error', (error: Error) => {
+      console.log('Mongo Connection ERROR: ' + error)
+    })
+
+    const run = async () => {
+      await mongoose.connect(MONGODB_URI || '', connectOpts)
+    }
+    run().catch((error) => console.error(error))
   }
 
   public start(): void {
