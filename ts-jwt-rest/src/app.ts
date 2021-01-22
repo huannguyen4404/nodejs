@@ -7,7 +7,8 @@ import mongoose from 'mongoose'
 import { errorHandler } from './common/middleware/error.middleware'
 import { notFoundHandler } from './common/middleware/notFound.middleware'
 import { ProductsRouter } from './products/products.routes'
-import { UsersRoutes } from './users/users.routes'
+import { AuthRoutes } from './users/routes/auth.routes'
+import { UsersRoutes } from './users/routes/users.routes'
 import { MONGODB_URI } from './utils/secrets'
 
 dotenv.config()
@@ -32,6 +33,7 @@ class App {
   }
 
   public routes(): void {
+    this.app.use('/api/auth', new AuthRoutes().router)
     this.app.use('/api/users', new UsersRoutes().router)
     this.app.use('/api/products', new ProductsRouter().router)
 

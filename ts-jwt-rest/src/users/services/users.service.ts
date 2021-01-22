@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { User } from './user.model'
+import { IUser, User } from '../user.model'
 
 class UsersService {
   private static instance: UsersService
@@ -21,6 +21,14 @@ class UsersService {
     } catch (error) {
       throw new Error(`create user failed: ${error.message}`)
     }
+  }
+
+  async getUserByUsername(username: string): Promise<IUser> {
+    return User.findOne({ username: username })
+  }
+
+  async readById(userId: string) {
+    return User.findById(userId)
   }
 }
 
