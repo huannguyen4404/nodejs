@@ -8,6 +8,14 @@
 
 ---
 
+## js-rest: \*
+
+- Tutor: Academind
+- Series: https://www.youtube.com/playlist?list=PL55RiY5tL51q4D-B63KBnygU6opNPFk_q
+- REST API with Express, eslint, jwt, mongoose
+
+---
+
 ## ts-jwt-rest: \*
 
 > Good for structure
