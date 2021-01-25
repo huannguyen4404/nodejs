@@ -8,7 +8,8 @@ export class ProductsController {
   }
 
   async getProduct(req: Request, res: Response): Promise<void> {
-    const productId = req.body.productId
+    const productId = req.params.id
+    // console.log(res.locals)
     try {
       const product = await productService.readById(productId)
       res.status(200).send(product)

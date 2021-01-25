@@ -1,4 +1,6 @@
 import { Request, Response } from 'express'
+import * as jwt from 'jsonwebtoken'
+import { JWT_SECRET } from '../../utils/secrets'
 import authService from '../services/auth.service'
 import usersService from '../services/users.service'
 
@@ -35,7 +37,10 @@ export class AuthController {
         })
       }
 
-      res.status(200).send({ message: 'Auth success' })
+      const payLoad = { id: userInfo._id }
+      const token = jwt.sign(payLoad, JWT_SECRET || '', { expiresIn: '1h' })
+
+      res.status(200).send({ token: token })
     } catch (error) {
       res.status(500).send(error.message)
     }

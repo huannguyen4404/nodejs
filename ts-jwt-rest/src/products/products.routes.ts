@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { checkJWT } from '../users/middleware/auth.middleware'
 import { ProductsController } from './products.controller'
 
 export class ProductsRouter {
@@ -12,9 +13,13 @@ export class ProductsRouter {
 
   routes(): void {
     this.router.get('/', this.productsController.getProducts)
-    this.router.get('/:id', this.productsController.getProduct)
-    this.router.post('/', this.productsController.createProduct)
-    this.router.put('/:id', this.productsController.updateProduct)
-    this.router.delete('/:id', this.productsController.deleteProduct)
+    this.router.get('/:id', [checkJWT], this.productsController.getProduct)
+    this.router.post('/', [checkJWT], this.productsController.createProduct)
+    this.router.put('/:id', [checkJWT], this.productsController.updateProduct)
+    this.router.delete(
+      '/:id',
+      [checkJWT],
+      this.productsController.deleteProduct,
+    )
   }
 }
