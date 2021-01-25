@@ -1,23 +1,21 @@
-const express = require('express')
-const helmet = require('helmet')
-const cors = require('cors')
-const compression = require('compression')
+import compression from 'compression'
+import cors from 'cors'
+import * as dotenv from 'dotenv'
+import express from 'express'
+import helmet from 'helmet'
 
-require('dotenv').config()
+dotenv.config()
 
 const app = express()
 
+// configs
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(compression())
 app.use(helmet())
 app.use(cors())
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+app.get('/', (req, res) => res.send('Hello World'))
 
 const port = process.env.PORT || 3000
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+app.listen(port, () => console.log(`Example app listening on port ${port}`))
