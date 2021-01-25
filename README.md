@@ -10,7 +10,7 @@
 
 ## ts-jwt-rest: \*
 
-> 
+> Good for structure
 
 - Blog article: https://medium.com/@phcollignon/node-rest-api-jwt-in-typescript-e6a8ae5cd8f8
 - REST with @type/express, jwt, @type/eslint, mongoose
