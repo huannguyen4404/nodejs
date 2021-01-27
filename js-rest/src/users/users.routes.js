@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt'
 import { Router } from 'express'
+import * as jwt from 'jsonwebtoken'
 import { User } from './user.model'
 
 const userRouter = Router()
@@ -46,7 +47,8 @@ userRouter.post('/login', (req, res) => {
         if (err || !result) {
           return res.status(401).json({ message: 'Auth failed.' })
         }
-        const token = user.email // @TODO: implement jwt later
+        const payload = { userId: user._id, email: user.email }
+        const token = jwt.sign(payload, process.env.JWT_KEY, { expiresIn: '1h' })
         return res.status(200).json({ token: token })
       })
     })

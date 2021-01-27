@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import Uploader from '../common/services/multer.service'
+import { checkAuth } from '../users/jwt.middleware'
 import { Product } from './product.model'
 
 const productRouter = Router()
@@ -25,7 +26,7 @@ productRouter.get('/', (req, res) => {
     })
 })
 
-productRouter.post('/', Uploader.single('image'), (req, res) => {
+productRouter.post('/', checkAuth, Uploader.single('image'), (req, res) => {
   const product = new Product({
     name: req.body.name,
     price: req.body.price,
@@ -71,7 +72,7 @@ productRouter.get('/:productId', (req, res) => {
     })
 })
 
-productRouter.patch('/:productId', (req, res) => {
+productRouter.patch('/:productId', checkAuth, (req, res) => {
   const id = req.params.productId
   Product.findOneAndUpdate({ _id: id }, req.body)
     .then((result) => {
@@ -88,7 +89,7 @@ productRouter.patch('/:productId', (req, res) => {
     })
 })
 
-productRouter.delete('/:productId', (req, res) => {
+productRouter.delete('/:productId', checkAuth, (req, res) => {
   const id = req.params.productId
   Product.findOneAndDelete({ _id: id })
     .then(() => {

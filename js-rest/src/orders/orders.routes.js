@@ -1,10 +1,11 @@
 import { Router } from 'express'
 import { Product } from '../products/product.model'
+import { checkAuth } from '../users/jwt.middleware'
 import { Order } from './order.model'
 
 const orderRouter = Router()
 
-orderRouter.get('/', (req, res) => {
+orderRouter.get('/', checkAuth, (req, res) => {
   Order.find()
     .select('_id product quantity')
     .populate('product', 'name')
@@ -20,7 +21,7 @@ orderRouter.get('/', (req, res) => {
     .catch((err) => res.status(500).json({ error: err }))
 })
 
-orderRouter.post('/', (req, res) => {
+orderRouter.post('/', checkAuth, (req, res) => {
   Product.findById(req.body.productId)
     .then((product) => {
       if (!product)
@@ -50,7 +51,7 @@ orderRouter.post('/', (req, res) => {
     })
 })
 
-orderRouter.get('/:orderId', (req, res) => {
+orderRouter.get('/:orderId', checkAuth, (req, res) => {
   Order.findById(req.params.orderId)
     .populate('product')
     .then((order) => {
@@ -67,7 +68,7 @@ orderRouter.get('/:orderId', (req, res) => {
     .catch((err) => res.status(500).json({ error: err }))
 })
 
-orderRouter.delete('/:orderId', (req, res) => {
+orderRouter.delete('/:orderId', checkAuth, (req, res) => {
   Order.remove({ _id: req.params.orderId })
     .then(() =>
       res.status(204).json({
