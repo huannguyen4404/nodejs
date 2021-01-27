@@ -10,9 +10,11 @@
 
 ## js-rest: \*
 
+> For JS
+
 - Tutor: Academind
 - Series: https://www.youtube.com/playlist?list=PL55RiY5tL51q4D-B63KBnygU6opNPFk_q
-- REST API with Express, eslint, jwt, mongoose
+- REST API with Express, eslint, babel, jwt, mongoose
 
 ---
 
