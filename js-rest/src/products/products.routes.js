@@ -1,43 +1,105 @@
 import { Router } from 'express'
+import { Product } from './product.model'
 
 const productRouter = Router()
 
 productRouter.get('/', (req, res) => {
-  res.status(200).json({
-    message: 'Handling GET requests to /products',
-  })
+  Product.find()
+    .select('name price _id')
+    .then((docs) => {
+      const response = {
+        count: docs.length,
+        products: docs.map((doc) => ({
+          ...doc?._doc,
+          detail: `http://localhost:3000/api/products/${doc?._id}`,
+        })),
+      }
+      res.status(200).json(response)
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({
+        error: err,
+      })
+    })
 })
 
 productRouter.post('/', (req, res) => {
-  res.status(201).json({
-    message: 'Handling POST requests to /products',
+  const product = new Product({
+    name: req.body.name,
+    price: req.body.price,
   })
+  product
+    .save()
+    .then((result) => {
+      res.status(201).json({
+        message: 'Created product successfully',
+        createdProduct: {
+          ...result?._doc,
+          detail: `http://localhost:3000/api/products/${result?._id}`,
+        },
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({
+        error: err,
+      })
+    })
 })
 
 productRouter.get('/:productId', (req, res) => {
   const id = req.params.productId
-  if (id === 'special') {
-    res.status(200).json({
-      message: 'You discovered the special ID',
-      id: id,
+  Product.findById(id)
+    .select('name price _id')
+    .then((doc) => {
+      console.log('From database', doc)
+      if (doc) {
+        res.status(200).json({
+          product: doc,
+          detail: `http://localhost:3000/api/products/${doc?._id}`,
+        })
+      } else {
+        res.status(404).json({ message: 'No valid entry found for provided ID' })
+      }
     })
-  } else {
-    res.status(200).json({
-      message: 'You passed an ID',
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({ error: err })
     })
-  }
 })
 
 productRouter.patch('/:productId', (req, res) => {
-  res.status(200).json({
-    message: 'Updated product!',
-  })
+  const id = req.params.productId
+  Product.findOneAndUpdate({ _id: id }, req.body)
+    .then((result) => {
+      res.status(200).json({
+        message: 'Product updated',
+        detail: `http://localhost:3000/api/products/${result?._id}`,
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({
+        error: err,
+      })
+    })
 })
 
 productRouter.delete('/:productId', (req, res) => {
-  res.status(200).json({
-    message: 'Deleted product!',
-  })
+  const id = req.params.productId
+  Product.findOneAndDelete({ _id: id })
+    .then(() => {
+      res.status(204).json({
+        message: 'Product deleted',
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({
+        error: err,
+      })
+    })
 })
 
 export default productRouter
