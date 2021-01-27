@@ -7,6 +7,7 @@ import mongoose from 'mongoose'
 import morgan from 'morgan'
 import errorMiddleware from './common/middleware/error.middleware'
 import notFoundMiddleware from './common/middleware/notFound.middleware'
+import { UPLOAD_DIR } from './configs/paths.config'
 import orderRouter from './orders/orders.routes'
 import productRouter from './products/products.routes'
 
@@ -15,12 +16,13 @@ dotenv.config()
 const app = express()
 
 // configs
+app.use(morgan('dev'))
+app.use('/uploads', express.static(UPLOAD_DIR))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(compression())
 app.use(helmet())
 app.use(cors())
-app.use(morgan('dev'))
 
 // connect DB
 const connectOpts = {

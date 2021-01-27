@@ -1,11 +1,12 @@
 import { Router } from 'express'
+import Uploader from '../common/services/multer.service'
 import { Product } from './product.model'
 
 const productRouter = Router()
 
 productRouter.get('/', (req, res) => {
   Product.find()
-    .select('name price _id')
+    .select('name price _id image')
     .then((docs) => {
       const response = {
         count: docs.length,
@@ -24,10 +25,11 @@ productRouter.get('/', (req, res) => {
     })
 })
 
-productRouter.post('/', (req, res) => {
+productRouter.post('/', Uploader.single('image'), (req, res) => {
   const product = new Product({
     name: req.body.name,
     price: req.body.price,
+    image: req.file.path,
   })
   product
     .save()
@@ -51,7 +53,7 @@ productRouter.post('/', (req, res) => {
 productRouter.get('/:productId', (req, res) => {
   const id = req.params.productId
   Product.findById(id)
-    .select('name price _id')
+    .select('name price _id image')
     .then((doc) => {
       console.log('From database', doc)
       if (doc) {
