@@ -10,6 +10,7 @@ import notFoundMiddleware from './common/middleware/notFound.middleware'
 import { UPLOAD_DIR } from './configs/paths.config'
 import orderRouter from './orders/orders.routes'
 import productRouter from './products/products.routes'
+import userRouter from './users/users.routes'
 
 dotenv.config()
 
@@ -40,6 +41,7 @@ mongoose.connect(process.env.MONGODB_URI || '', connectOpts)
 // routers
 app.use('/api/orders', orderRouter)
 app.use('/api/products', productRouter)
+app.use('/api/users', userRouter)
 
 // catch errors
 app.use(notFoundMiddleware)
